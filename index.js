@@ -5,7 +5,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const app = (0, express_1.default)();
-const port = 8080;
+const port = 3000;
 app.use(express_1.default.json());
 let users = [
     { id: 1, name: 'Jan Kowalski', email: 'jan.kowalski@example.com', age: 30 },
@@ -63,7 +63,7 @@ app.get('/', (req, res) => {
     res.send('Welcome to the Users API!');
 });
 app.get('/users', (req, res) => {
-    const formattedJson = JSON.stringify(users, null, 2);
+    let formattedJson = JSON.stringify(users, null, 2);
     res.type('json').send(formattedJson);
 });
 app.get('/countusers', (req, res) => {
@@ -76,12 +76,17 @@ app.get('/countwomen', (req, res) => {
     res.json({ womenCount: getWomenCount() });
 });
 app.post('/getuserbyid/:id', (req, res) => {
-    const user = users.find(user => user.id === parseInt(req.params.id));
-    res.json(user || { error: "User not found" });
+    let user = users.find(user => user.id === parseInt(req.params.id));
+    res.json(user);
+});
+app.post('/getusersbyemail/:domain', (req, res) => {
+    let domain = req.params.domain;
+    let user = users.filter(user => user.email.split('@')[1] === domain);
+    res.json(user);
 });
 app.post('/tshirt/:id', (req, res) => {
-    const { id } = req.params;
-    const { logo } = req.body;
+    let { id } = req.params;
+    let { logo } = req.body;
     res.send({
         tshirt: `tshirt with your logo ${logo} and an ID of ${id}`
     });

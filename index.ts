@@ -1,7 +1,8 @@
 import express, { Request, Response } from 'express';
 
 const app = express();
-const port = 8080;
+const port = 3000;
+
 
 app.use(express.json())
 
@@ -84,6 +85,15 @@ app.post('/getuserbyid/:id', (req, res) => {
   let user = users.find(user => user.id === parseInt(req.params.id));
   res.json(user);
 });
+
+
+app.post('/getusersbyemail/:domain', (req, res) => {
+  let domain = req.params.domain
+  let user = users.filter(user => user.email.split('@')[1] === domain);
+  res.json(user);
+});
+
+
 
 app.post('/tshirt/:id', (req, res) => {
 
