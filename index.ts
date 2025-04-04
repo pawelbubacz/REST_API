@@ -63,7 +63,7 @@ app.get('/', (req, res) => {
 });
 
 app.get('/users', (req, res) => {
-  const formattedJson = JSON.stringify(users, null, 2);
+  let formattedJson = JSON.stringify(users, null, 2);
   res.type('json').send(formattedJson);
 });
 
@@ -79,10 +79,16 @@ app.get('/countwomen', (req, res)  => {
   res.json({ womenCount: getWomenCount() });
 });
 
+
+app.post('/getuserbyid/:id', (req, res) => {
+  let user = users.find(user => user.id === parseInt(req.params.id));
+  res.json(user);
+});
+
 app.post('/tshirt/:id', (req, res) => {
 
-  const { id } = req.params;
-  const { logo } = req.body; 
+  let { id } = req.params;
+  let { logo } = req.body; 
 
   res.send({
     tshirt: `tshirt with your logo ${logo} and an ID of ${id}`

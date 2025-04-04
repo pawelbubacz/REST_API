@@ -75,6 +75,10 @@ function getWomenCount() {
 app.get('/countwomen', (req, res) => {
     res.json({ womenCount: getWomenCount() });
 });
+app.post('/getuserbyid/:id', (req, res) => {
+    const user = users.find(user => user.id === parseInt(req.params.id));
+    res.json(user || { error: "User not found" });
+});
 app.post('/tshirt/:id', (req, res) => {
     const { id } = req.params;
     const { logo } = req.body;
