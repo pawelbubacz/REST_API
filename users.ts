@@ -1,13 +1,4 @@
-"use strict";
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
-const app = (0, express_1.default)();
-const port = 3000;
-app.use(express_1.default.json());
-let users = [
+export let users = [
     { id: 1, name: 'Jan Kowalski', email: 'jan.kowalski@example.com', age: 30 },
     { id: 2, name: 'Anna Nowak', email: 'anna.nowak@example.com', age: 25 },
     { id: 3, name: 'Piotr Wiśniewski', email: 'piotr.wisniewski@mail.com', age: 28 },
@@ -58,39 +49,4 @@ let users = [
     { id: 48, name: 'Iwona Czajka', email: 'iwona.czajka@test.com', age: 30 },
     { id: 49, name: 'Szymon Olszewski', email: 'szymon.olszewski@example.com', age: 34 },
     { id: 50, name: 'Dominik Nowacki', email: 'dominik.nowacki@mail.com', age: 28 },
-];
-app.get('/', (req, res) => {
-    res.send('Welcome to the Users API!');
-});
-app.get('/users', (req, res) => {
-    let formattedJson = JSON.stringify(users, null, 2);
-    res.type('json').send(formattedJson);
-});
-app.get('/countusers', (req, res) => {
-    res.json({ userCount: users.length });
-});
-function getWomenCount() {
-    return users.filter(user => user.name.slice(-1) == "a").length;
-}
-app.get('/countwomen', (req, res) => {
-    res.json({ womenCount: getWomenCount() });
-});
-app.post('/getuserbyid/:id', (req, res) => {
-    let user = users.find(user => user.id === parseInt(req.params.id));
-    res.json(user);
-});
-app.post('/getusersbyemail/:domain', (req, res) => {
-    let domain = req.params.domain;
-    let user = users.filter(user => user.email.split('@')[1] === domain);
-    res.json(user);
-});
-app.post('/tshirt/:id', (req, res) => {
-    let { id } = req.params;
-    let { logo } = req.body;
-    res.send({
-        tshirt: `tshirt with your logo ${logo} and an ID of ${id}`
-    });
-});
-app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
-});
+  ];

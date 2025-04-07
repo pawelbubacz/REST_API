@@ -1,9 +1,9 @@
 {
   "name": "untitled-folder",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
-    "start": "tsc && node index.js",
+    "start": "tsc && node app.js",
     "lint": "eslint . --ext .ts",
     "test": "echo \"Error: no test specified\" && exit 1",
     "stop": "taskkill /F /IM node.exe"
