@@ -1,4 +1,7 @@
-export let users = [
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.users = void 0;
+exports.users = [
     { id: 1, name: 'Jan Kowalski', email: 'jan.kowalski@example.com', age: 30 },
     { id: 2, name: 'Anna Nowak', email: 'anna.nowak@example.com', age: 25 },
     { id: 3, name: 'Piotr Wiśniewski', email: 'piotr.wisniewski@mail.com', age: 28 },
@@ -49,4 +52,4 @@ export let users = [
     { id: 48, name: 'Iwona Czajka', email: 'iwona.czajka@test.com', age: 30 },
     { id: 49, name: 'Szymon Olszewski', email: 'szymon.olszewski@example.com', age: 34 },
     { id: 50, name: 'Dominik Nowacki', email: 'dominik.nowacki@mail.com', age: 28 },
-  ];
+];
