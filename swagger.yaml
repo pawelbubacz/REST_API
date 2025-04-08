@@ -11,8 +11,6 @@ servers:
 tags:
   - name: Users
     description: Operations related to users
-  - name: T-Shirts
-    description: Operations related to t-shirts
 
 paths:
   /:
@@ -154,10 +152,3 @@ components:
         email:
           type: string
           example: alice@example.com
-
-    TshirtRequest:
-      type: object
-      properties:
-        logo:
-          type: string
-          example: NIKE
