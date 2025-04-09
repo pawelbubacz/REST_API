@@ -32,6 +32,15 @@ var __importStar = (this && this.__importStar) || (function () {
         return result;
     };
 })();
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.welcome = welcome;
 exports.getUsers = getUsers;
@@ -40,27 +49,39 @@ exports.countWomen = countWomen;
 exports.getUserById = getUserById;
 exports.getUsersByEmail = getUsersByEmail;
 const userService = __importStar(require("../service/service"));
-async function welcome(req, res) {
-    res.send('Welcome to the Users API!');
+function welcome(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        res.send('Welcome to the Useaaars API!');
+    });
 }
-async function getUsers(req, res) {
-    const users = await userService.getAllUsers();
-    res.json(users);
+function getUsers(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const users = yield userService.getAllUsers();
+        res.json(users);
+    });
 }
-async function countUsers(req, res) {
-    const userCount = await userService.countUsers();
-    res.json({ userCount });
+function countUsers(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const userCount = yield userService.countUsers();
+        res.json({ userCount });
+    });
 }
-async function countWomen(req, res) {
-    const womenCount = await userService.countWomen();
-    res.json({ womenCount });
+function countWomen(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const womenCount = yield userService.countWomen();
+        res.json({ womenCount });
+    });
 }
-async function getUserById(req, res) {
-    const user = await userService.getUserById(parseInt(req.params.id));
-    res.json(user);
+function getUserById(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const user = yield userService.getUserById(parseInt(req.params.id));
+        res.json(user);
+    });
 }
-async function getUsersByEmail(req, res) {
-    const domain = req.params.domain;
-    const users = await userService.getUsersByEmail(domain);
-    res.json(users);
+function getUsersByEmail(req, res) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const domain = req.params.domain;
+        const users = yield userService.getUsersByEmail(domain);
+        res.json(users);
+    });
 }

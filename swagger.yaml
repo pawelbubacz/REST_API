@@ -81,7 +81,7 @@ paths:
                     type: integer
                     example: 12
 
-  /getuserbyid/{id}:
+  /userbyid/{id}:
     get:
       summary: Get user by ID
       tags:
@@ -107,7 +107,7 @@ paths:
         '404':
           description: User not found
 
-  /getusersbyemail/{domain}:
+  /usersbyemail/{domain}:
     get: 
       summary: Get users by email domain
       tags:

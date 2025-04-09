@@ -3,15 +3,17 @@ import { TsMorphMetadataProvider } from '@mikro-orm/reflection';
 
 const config: Options = {
     driver: PostgreSqlDriver,
-    dbName: 'test',
+    dbName: 'users',
     user: 'postgres',
     password: 'bubuplug',
     host: 'localhost',
     port: 5432,
-    entities: ['dist//*.entity.js'],
-    entitiesTs: ['src//*.entity.ts'],
+    entities: ['./dist/entities/*.js'],
+    entitiesTs: ['./entities/*.ts'],
     metadataProvider:
     TsMorphMetadataProvider,
-    debug: true, };
+    debug: true,
+    allowGlobalContext: true, 
+};
 
 export default config;

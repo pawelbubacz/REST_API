@@ -38,20 +38,20 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const userController = __importStar(require("./controller/controller"));
-const swagger_ui_express_1 = __importDefault(require("swagger-ui-express"));
+const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
 const swaggerDocument = YAML.load('./swagger.yaml');
 const app = (0, express_1.default)();
 const port = 3000;
 app.use(express_1.default.json());
-app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.get('/', userController.welcome);
 app.get('/users', userController.getUsers);
 app.get('/countusers', userController.countUsers);
 app.get('/countwomen', userController.countWomen);
 app.get('/userbyid/:id', userController.getUserById);
 app.get('/usersbyemail/:domain', userController.getUsersByEmail);
-app.use('/api-docs', swagger_ui_express_1.default.serve, swagger_ui_express_1.default.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
