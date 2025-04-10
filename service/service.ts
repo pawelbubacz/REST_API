@@ -1,7 +1,18 @@
 import pool from '../data/db';
 
-export async function getAllUsers() {
-  const result = await pool.query('SELECT * FROM user_data');
+export async function getFilteredUsers(filters: { [key: string]: string }) {
+  const conditions: string[] = [];
+  const values: string[] = [];
+
+  Object.entries(filters).forEach(([key, value], index) => {
+    conditions.push(`${key} ILIKE $${index + 1}`);
+    values.push(`%${value}%`);
+  });
+
+  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
+  const query = `SELECT * FROM user_data ${whereClause}`;
+  const result = await pool.query(query, values);
+
   return result.rows;
 }
 

@@ -6,7 +6,10 @@ export async function welcome(req: Request, res: Response) {
 }
 
 export async function getUsers(req: Request, res: Response) {
-    const users = await userService.getAllUsers();
+    const filters = Object.fromEntries(
+        Object.entries(req.query).map(([key, value]) => [key, String(value)])
+    );
+    const users = await userService.getFilteredUsers(filters);
     res.json(users);
 }
 
