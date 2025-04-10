@@ -25,8 +25,8 @@ export async function getUserById(req: Request, res: Response) {
     res.json(user);
 }
 
-export async function getUsersByEmail(req: Request, res: Response) {
+export async function getUsersByDomain(req: Request, res: Response) {
     const domain = req.params.domain;
-    const users = await userService.getUsersByEmail(domain);
+    const users = await userService.getUsersByDomain(domain);
     res.json(users);
 }

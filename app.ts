@@ -15,7 +15,7 @@ app.get('/users', userController.getUsers);
 app.get('/countusers', userController.countUsers);
 app.get('/countwomen', userController.countWomen);
 app.get('/userbyid/:id', userController.getUserById);
-app.get('/usersbyemail/:domain', userController.getUsersByEmail);
+app.get('/usersbydomain/:domain', userController.getUsersByDomain);
 
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
