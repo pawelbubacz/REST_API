@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import * as userService from '../service/service';
 
 export async function welcome(req: Request, res: Response) {
-  res.send('Welcome to the Useaaars API!');
+  res.send('Welcome to the Users API!');
 }
 
 export async function getUsers(req: Request, res: Response) {
