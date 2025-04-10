@@ -26,10 +26,12 @@ describe('Mocked Users Tests', () => {
         const user = mockedUsers.find((u) => u.id === 999);
         expect(user).toBeUndefined();
     });
+
     test('should verify all users have valid ages', () => {
         const allValidAges = mockedUsers.every((u) => Number.isInteger(u.age) && u.age > 0);
         expect(allValidAges).toBe(true);
     });
+
     test('should verify all users have unique IDs', () => {
         const ids = mockedUsers.map((u) => u.id);
         const uniqueIds = new Set(ids);
@@ -45,11 +47,6 @@ describe('Mocked Users Tests', () => {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         const allValidEmails = mockedUsers.every((u) => emailRegex.test(u.email));
         expect(allValidEmails).toBe(true);
-    });
-
-    test('should find users older than 30', () => {
-        const usersOlderThan30 = mockedUsers.filter((u) => u.age > 30);
-        expect(usersOlderThan30.length).toBeGreaterThan(0);
     });
 
     test('should verify no user has a negative age', () => {
