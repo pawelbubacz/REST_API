@@ -50,3 +50,9 @@ export async function getUsersByDomain(domain: string) {
 
   return result.rows;
 }
+
+export async function addUsers(users: { name: string; email: string; age: number }[]) {
+  const query = 'INSERT INTO user_data(name, email, age) VALUES($1, $2, $3)';
+  const values = users.map(user => [user.name, user.email, user.age]);
+  const result = await Promise.all(values.map(value => pool.query(query, value)));
+}

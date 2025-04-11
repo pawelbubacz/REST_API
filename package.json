@@ -3,9 +3,10 @@
   "version": "1.0.0",
   "main": "dist/app.js",
   "scripts": {
-    "start": "tsc && node dist/app.js",
+    "start": "tsc && node dist/src/app.js",
     "lint": "eslint . --ext .ts",
     "test": "jest",
+    "test:coverage": "jest --coverage",
     "stop": "taskkill /F /IM node.exe"
   },
   "keywords": [],

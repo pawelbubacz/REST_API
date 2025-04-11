@@ -1,8 +1,9 @@
+import path from 'path'; 
 import express from 'express';
 import * as userController from './controller/controller';
 const swaggerUi = require('swagger-ui-express');
 const YAML = require('yamljs');
-const swaggerDocument = YAML.load('./swagger.yaml'); 
+const swaggerDocument = YAML.load(path.resolve(__dirname, '../../infrastructure/config/swagger.yaml'));
 
 const app = express();
 const port = 3000;
@@ -16,6 +17,7 @@ app.get('/countusers', userController.countUsers);
 app.get('/countwomen', userController.countWomen);
 app.get('/userbyid/:id', userController.getUserById);
 app.get('/usersbydomain/:domain', userController.getUsersByDomain);
+app.post('/addusers', userController.addUsers);
 
 
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));

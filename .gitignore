@@ -1,5 +1,7 @@
 node_modules/
 dist/
 .env
-temp/
-entites/entites.js
+src/temp/
+entites/entity.js
+tests/coverage/
+infrastructure/config/mikro-orm.config.ts

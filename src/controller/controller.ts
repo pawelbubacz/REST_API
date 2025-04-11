@@ -33,3 +33,13 @@ export async function getUsersByDomain(req: Request, res: Response) {
     const users = await userService.getUsersByDomain(domain);
     res.json(users);
 }
+
+export async function addUsers(req: Request, res: Response) {
+    try {
+        const newUsers = req.body;
+        const createdUsers = await userService.addUsers(newUsers);
+        res.status(201).json(createdUsers);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to add users' });
+    }
+}
