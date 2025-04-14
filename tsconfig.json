@@ -4,15 +4,17 @@
     "useDefineForClassFields": false,
     "experimentalDecorators": true,
     "module": "CommonJS",
-    "moduleResolution": "node",
+    "moduleResolution": "Node",
     "typeRoots": ["node_modules/@types"],
     "types": ["node"],
     "outDir": "./dist",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     "strict": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
   },
-  "include": ["src/**/*"],
+  "include": ["src/**/*", "infrastructure/**/*.yaml"],
   "exclude": ["node_modules", "dist"]
 }

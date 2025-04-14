@@ -1,4 +1,4 @@
-const mockedUsers = require('./mocked-users');
+const mockedUsers = require('./mocked-users-data');
 
 describe('Mocked Users Tests', () => {
     test('should have 55 mocked users', () => {
@@ -53,4 +53,5 @@ describe('Mocked Users Tests', () => {
         const hasNegativeAge = mockedUsers.some((u) => u.age < 0);
         expect(hasNegativeAge).toBe(false);
     });
+
 });

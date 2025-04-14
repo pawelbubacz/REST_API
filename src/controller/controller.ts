@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as userService from '../service/service';
+import * as userService from '../databaseService/databaseService.ts';
 
 export async function welcome(req: Request, res: Response) {
   res.send('Welcome to the Users API!');

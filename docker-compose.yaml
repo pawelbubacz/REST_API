@@ -3,7 +3,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: your-app-image
+    image: app
     container_name: app
     ports:
       - "3000:3000"

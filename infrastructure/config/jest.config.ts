@@ -10,4 +10,5 @@ module.exports = {
     '!src/config/**',
   ],
   coverageReporters: ['json', 'lcov', 'text', 'clover'],
+  testRegex: '\\.test\\.ts§',
 };
