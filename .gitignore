@@ -5,3 +5,4 @@ src/temp/
 entites/entity.js
 tests/coverage/
 infrastructure/config/mikro-orm.config.ts
+docker-compose.yaml

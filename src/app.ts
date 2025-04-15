@@ -1,8 +1,9 @@
 import path from 'path'; 
 import express from 'express';
 import * as userController from './controller/controller.ts';
-const swaggerUi = require('swagger-ui-express');
-const YAML = require('yamljs');
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
+
 const swaggerDocument = YAML.load(path.resolve('../infrastructure/config/swagger.yaml'));
 
 const app = express();
