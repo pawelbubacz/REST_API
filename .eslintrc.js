@@ -51,16 +51,6 @@ module.exports = {
           'allowElseIf': false
         }
       ],
-      'no-lonely-if': 'error',
-      '@typescript-eslint/no-magic-numbers': [
-        'warn',
-        {
-          'ignoreArrayIndexes': true,
-          'ignoreDefaultValues': true,
-          'ignoreEnums': true,
-          'ignore': [0, 1]
-        }
-      ],
       'prefer-const': 'error',
       'prefer-template': 'warn',
       'block-spacing': 'warn',

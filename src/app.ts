@@ -1,4 +1,4 @@
-import path from 'path'; 
+import path from 'path';
 import express from 'express';
 import * as userController from './controller/controller.ts';
 import swaggerUi from 'swagger-ui-express';
