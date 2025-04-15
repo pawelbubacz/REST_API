@@ -1,12 +1,15 @@
 import { Request, Response } from 'express';
-import * as userService from '../service/service';
+import * as userService from '../databaseService/databaseService.ts';
 
 export async function welcome(req: Request, res: Response) {
   res.send('Welcome to the Users API!');
 }
 
 export async function getUsers(req: Request, res: Response) {
-    const users = await userService.getAllUsers();
+    const filters = Object.fromEntries(
+        Object.entries(req.query).map(([key, value]) => [key, String(value)])
+    );
+    const users = await userService.getFilteredUsers(filters);
     res.json(users);
 }
 
@@ -25,8 +28,18 @@ export async function getUserById(req: Request, res: Response) {
     res.json(user);
 }
 
-export async function getUsersByEmail(req: Request, res: Response) {
+export async function getUsersByDomain(req: Request, res: Response) {
     const domain = req.params.domain;
-    const users = await userService.getUsersByEmail(domain);
+    const users = await userService.getUsersByDomain(domain);
     res.json(users);
+}
+
+export async function addUsers(req: Request, res: Response) {
+    try {
+        const newUsers = req.body;
+        const createdUsers = await userService.addUsers(newUsers);
+        res.status(201).json(createdUsers);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to add users' });
+    }
 }

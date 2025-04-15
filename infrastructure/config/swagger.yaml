@@ -1,0 +1,192 @@
+openapi: 3.0.0
+info:
+  title: Users API
+  description: API for managing users
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Local server
+
+paths:
+  /:
+    get:
+      summary: Welcome message
+      description: Returns a welcome message.
+      responses:
+        '200':
+          description: Successful response
+          content:
+            text/plain:
+              schema:
+                type: string
+
+  /users:
+    get:
+      summary: Get all users
+      description: Retrieve a list of users with optional query filters.
+      parameters:
+        - name: name
+          in: query
+          description: Filter users by name
+          schema:
+            type: string
+        - name: email
+          in: query
+          description: Filter users by email
+          schema:
+            type: string
+        - name: age
+          in: query
+          description: Filter users by age
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    email:
+                      type: string
+                    age:
+                      type: integer
+
+  /countusers:
+    get:
+      summary: Count all users
+      description: Returns the total number of users.
+      responses:
+        '200':
+          description: Total user count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  userCount:
+                    type: integer
+
+  /countwomen:
+    get:
+      summary: Count women users
+      description: Returns the total number of women users.
+      responses:
+        '200':
+          description: Total women user count
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  womenCount:
+                    type: integer
+
+  /userbyid/{id}:
+    get:
+      summary: Get user by ID
+      description: Retrieve a user by their ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID of the user
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  age:
+                    type: integer
+        '404':
+          description: User not found
+
+  /usersbydomain/{domain}:
+    get:
+      summary: Get users by email domain
+      description: Retrieve users whose email matches the specified domain.
+      parameters:
+        - name: domain
+          in: path
+          required: true
+          description: Email domain to filter users
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    email:
+                      type: string
+                    age:
+                      type: integer
+        '404':
+          description: No users found with the specified domain
+
+  /addusers:
+    post:
+      summary: Add new users
+      description: Add one or more new users to the database.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  email:
+                    type: string
+                  age:
+                    type: integer
+      responses:
+        '201':
+          description: Users successfully added
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    name:
+                      type: string
+                    email:
+                      type: string
+                    age:
+                      type: integer
+        '500':
+          description: Failed to add users
