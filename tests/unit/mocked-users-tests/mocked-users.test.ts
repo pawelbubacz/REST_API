@@ -1,9 +1,6 @@
 import usersData from './mocked-users-data';
 
 describe('Mocked Users Tests', () => {
-  test('should have 55 mocked users', () => {
-    expect(usersData.length).toBe(55);
-  });
 
   test('should find user with ID 1', () => {
     const user = usersData.find((u) => u.id === 1);

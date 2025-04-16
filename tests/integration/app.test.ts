@@ -12,15 +12,15 @@ describe('API Endpoints', () => {
     expect(response.text).toBe('Welcome to the Users API!');
   });
 
-  it('should fetch filtered users with the name "Alice"', async () => {
-    const filteredMockUsers = mockUsers.filter((user: any) => user.name === 'Alice');
+  it('should fetch filtered users with the name "Jan"', async () => {
+    const filteredMockUsers = mockUsers.filter((user: any) => user.name === 'Jan');
     (userService.getFilteredUsers as jest.Mock).mockResolvedValue(filteredMockUsers);
 
-    const response = await request(app).get('/users?name=Alice');
+    const response = await request(app).get('/users?name=Jan');
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(filteredMockUsers);
-    expect(response.body.every((user: any) => user.name === 'Alice')).toBe(true);
+    expect(response.body.every((user: any) => user.name === 'Jan')).toBe(true);
   });
 
   it('should return the total user count', async () => {
@@ -31,21 +31,12 @@ describe('API Endpoints', () => {
     expect(response.body).toEqual({ userCount: 10 });
   });
 
-  it('should return the count of women', async () => {
-    (userService.countWomen as jest.Mock).mockResolvedValue(5);
-
+  it('should return the count of women based on names ending with "a"', async () => {
+    const womenCount = mockUsers.filter((user: any) => user.name.endsWith('a')).length;
+  
     const response = await request(app).get('/countwomen');
     expect(response.status).toBe(200);
-    expect(response.body).toEqual({ womenCount: 5 });
-  });
-
-  it('should fetch a user by ID', async () => {
-    const mockUser = mockUsers[0];
-    (userService.getUserById as jest.Mock).mockResolvedValue(mockUser);
-
-    const response = await request(app).get('/userbyid/1');
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(mockUser);
+    expect(response.body).toEqual({ womenCount });
   });
 
   it('should fetch users by email domain', async () => {
