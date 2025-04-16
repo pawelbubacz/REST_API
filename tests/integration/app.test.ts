@@ -33,10 +33,12 @@ describe('API Endpoints', () => {
 
   it('should return the count of women based on names ending with "a"', async () => {
     const womenCount = mockUsers.filter((user: any) => user.name.endsWith('a')).length;
-  
+    (userService.countWomen as jest.Mock).mockResolvedValue(womenCount);
+
     const response = await request(app).get('/countwomen');
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ womenCount });
+    expect(response.body.womenCount).toBe(womenCount);
   });
 
   it('should fetch users by email domain', async () => {
