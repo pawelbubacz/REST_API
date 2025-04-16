@@ -4,8 +4,7 @@ import * as userController from './controller/controller.ts';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 
-const swaggerDocument = YAML.load(path.resolve('../infrastructure/config/swagger.yaml'));
-
+const swaggerDocument = YAML.load(path.resolve(__dirname, '../infrastructure/config/swagger.yaml'));
 const app = express();
 const port = 3000;
 

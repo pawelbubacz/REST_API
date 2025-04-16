@@ -331,4 +331,4 @@ const mockedUsers = [
   }
 ];
 
-module.exports = mockedUsers;
+export default mockedUsers;
