@@ -15,9 +15,7 @@ describe('API Endpoints', () => {
   it('should fetch filtered users with the name "Jan"', async () => {
     const filteredMockUsers = mockUsers.filter((user: { name: string }) => user.name === 'Jan');
     (userService.getFilteredUsers as jest.Mock).mockResolvedValue(filteredMockUsers);
-
     const response = await request(app).get('/users?name=Jan');
-
     expect(response.status).toBe(200);
     expect(response.body).toEqual(filteredMockUsers);
     expect(response.body.every((user: { name: string }) => user.name === 'Jan')).toBe(true);
@@ -25,7 +23,6 @@ describe('API Endpoints', () => {
 
   it('should return the total user count', async () => {
     (userService.countUsers as jest.Mock).mockResolvedValue(10);
-
     const response = await request(app).get('/countusers');
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ userCount: 10 });
@@ -34,7 +31,6 @@ describe('API Endpoints', () => {
   it('should return the count of women based on names ending with "a"', async () => {
     const womenCount = mockUsers.filter((user: { name: string }) => user.name.endsWith('a')).length;
     (userService.countWomen as jest.Mock).mockResolvedValue(womenCount);
-
     const response = await request(app).get('/countwomen');
     expect(response.status).toBe(200);
     expect(response.body).toEqual({ womenCount });
@@ -43,7 +39,6 @@ describe('API Endpoints', () => {
 
   it('should fetch users by email domain', async () => {
     (userService.getUsersByDomain as jest.Mock).mockResolvedValue(mockUsers);
-
     const response = await request(app).get('/usersbydomain/example.com');
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockUsers);
@@ -52,7 +47,6 @@ describe('API Endpoints', () => {
   it('should add new users', async () => {
     const createdUsers = mockUsers;
     (userService.addUsers as jest.Mock).mockResolvedValue(createdUsers);
-
     const response = await request(app).post('/addusers').send(mockUsers);
     expect(response.status).toBe(201);
     expect(response.body).toEqual(createdUsers);
@@ -60,7 +54,6 @@ describe('API Endpoints', () => {
 
   it('should handle errors when adding users', async () => {
     (userService.addUsers as jest.Mock).mockRejectedValue(new Error('Database error'));
-
     const response = await request(app).post('/addusers').send([]);
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: 'Failed to add users' });
