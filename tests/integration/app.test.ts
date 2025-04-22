@@ -13,14 +13,14 @@ describe('API Endpoints', () => {
   });
 
   it('should fetch filtered users with the name "Jan"', async () => {
-    const filteredMockUsers = mockUsers.filter((user: any) => user.name === 'Jan');
+    const filteredMockUsers = mockUsers.filter((user: { name: string }) => user.name === 'Jan');
     (userService.getFilteredUsers as jest.Mock).mockResolvedValue(filteredMockUsers);
 
     const response = await request(app).get('/users?name=Jan');
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(filteredMockUsers);
-    expect(response.body.every((user: any) => user.name === 'Jan')).toBe(true);
+    expect(response.body.every((user: { name: string }) => user.name === 'Jan')).toBe(true);
   });
 
   it('should return the total user count', async () => {
@@ -32,7 +32,7 @@ describe('API Endpoints', () => {
   });
 
   it('should return the count of women based on names ending with "a"', async () => {
-    const womenCount = mockUsers.filter((user: any) => user.name.endsWith('a')).length;
+    const womenCount = mockUsers.filter((user: { name: string }) => user.name.endsWith('a')).length;
     (userService.countWomen as jest.Mock).mockResolvedValue(womenCount);
 
     const response = await request(app).get('/countwomen');
