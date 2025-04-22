@@ -1,10 +1,10 @@
-import path from 'path'; 
+import path from 'path';
 import express from 'express';
 import * as userController from './controller/controller.ts';
-const swaggerUi = require('swagger-ui-express');
-const YAML = require('yamljs');
-const swaggerDocument = YAML.load(path.resolve('../infrastructure/config/swagger.yaml'));
+import swaggerUi from 'swagger-ui-express';
+import YAML from 'yamljs';
 
+const swaggerDocument = YAML.load(path.resolve(__dirname, '../infrastructure/config/swagger.yaml'));
 const app = express();
 const port = 3000;
 
