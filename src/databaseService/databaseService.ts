@@ -1,60 +1,113 @@
-import pool from '../data/db';
+import { EntityManager, EntityRepository, wrap, FilterQuery } from '@mikro-orm/core';
 
-export const getFilteredUsers = async (filters: { [key: string]: string }) => {
-  const conditions: string[] = [];
-  const values: string[] = [];
+interface UserFilter {
+  [key: string]: string;
+}
 
-  Object.entries(filters).forEach(([key, value], index) => {
-    conditions.push(`${key} ILIKE $${index + 1}`);
-    values.push(`%${value}%`);
-  });
+interface IUserService {
+  getFilteredUsers(filters: UserFilter): Promise<User[]>;
+  countUsers(): Promise<number>;
+  countWomen(): Promise<number>;
+  getUserById(id: number): Promise<User>;
+  getUsersByDomain(domain: string): Promise<User[]>;
+  addUsers(users: UserDto[]): Promise<User[]>;
+}
 
-  const whereClause = conditions.length ? `WHERE ${conditions.join(' AND ')}` : '';
-  const query = `SELECT * FROM user_data ${whereClause}`;
-  const result = await pool.query(query, values);
+interface UserDto {
+  name: string;
+  email: string;
+  age: number;
+}
 
-  return result.rows;
-};
+import { User } from '../entities/entity.ts';
 
-export const countUsers = async () => {
-  const result = await pool.query('SELECT COUNT(*) FROM user_data');
-  return parseInt(result.rows[0].count, 10);
-};
+class MikroOrmUserService implements IUserService {
+  private userRepository: EntityRepository<User>;
+  private em: EntityManager;
 
-export const countWomen = async () => {
-  const result = await pool.query('SELECT COUNT(*) FROM user_data WHERE name LIKE $1', ['%a']);
-  return parseInt(result.rows[0].count, 10);
-};
-
-export const getUserById = async (id: number) => {
-  if (isNaN(id)) {
-    throw new Error('Id has to be a number');
+  constructor(em: EntityManager) {
+    this.em = em;
+    this.userRepository = em.getRepository(User);
   }
 
-  const result = await pool.query('SELECT * FROM user_data WHERE id = $1', [id]);
-  if (result.rows.length === 0) {
-    throw new Error(`User with id ${id} not found`);
-  }
-  return result.rows[0];
-};
+  async getFilteredUsers(filters: UserFilter): Promise<User[]> {
+    const filterQuery: FilterQuery<User> = {};
 
-export const getUsersByDomain = async (domain: string) => {
-  if (domain.length < 3) {
-    throw new Error(`Domain ${domain} is too short`);
+    Object.entries(filters).forEach(([key, value]) => {
+      (filterQuery as Record<string, { $ilike: string }>)[key] = { $ilike: `%${value}%` };
+    });
+
+    return await this.userRepository.find(filterQuery);
   }
 
-  const result = await pool.query('SELECT * FROM user_data WHERE email LIKE $1', [`%${domain}%`]);
-  if (result.rows.length === 0) {
-    throw new Error(`No users found with email domain ${domain}`);
+  async countUsers(): Promise<number> {
+    return await this.userRepository.count();
   }
 
-  return result.rows;
-};
+  async countWomen(): Promise<number> {
+    return await this.userRepository.count({
+      name: { $like: '%a' }
+    });
+  }
 
-export const addUsers = async (users: { name: string; email: string; age: number }[]) => {
-  const query = 'INSERT INTO user_data(name, email, age) VALUES($1, $2, $3)';
-  const values = users.map(user => [user.name, user.email, user.age]);
-  const result = await Promise.all(values.map(value => pool.query(query, value)));
+  async getUserById(id: number): Promise<User> {
+    if (isNaN(id)) {
+      throw new Error('Id has to be a number');
+    }
 
-  return result.map(res => res.rows);
-};
+    const user = await this.userRepository.findOne({ id });
+
+    if (!user) {
+      throw new Error(`User with id ${id} not found`);
+    }
+
+    return user;
+  }
+
+  async getUsersByDomain(domain: string): Promise<User[]> {
+    if (domain.length < 3) {
+      throw new Error(`Domain ${domain} is too short`);
+    }
+
+    const users = await this.userRepository.find({
+      email: { $like: `%${domain}%` }
+    });
+
+    if (users.length === 0) {
+      throw new Error(`No users found with email domain ${domain}`);
+    }
+
+    return users;
+  }
+
+  async addUsers(userDtos: UserDto[]): Promise<User[]> {
+    const users = userDtos.map(dto => {
+      const user = new User();
+      wrap(user).assign(dto);
+      return user;
+    });
+
+    await this.em.persistAndFlush(users);
+    return users;
+  }
+}
+
+let userService: MikroOrmUserService | null = null;
+
+export function setEntityManager(em: EntityManager) {
+  userService = new MikroOrmUserService(em.fork());
+}
+
+function getService(): MikroOrmUserService {
+  if (!userService) {
+    throw new Error('UserService not initialized. Call setEntityManager(em) first.');
+  }
+  return userService;
+}
+
+export const getFilteredUsers = (filters: UserFilter) => getService().getFilteredUsers(filters);
+export const countUsers = () => getService().countUsers();
+export const countWomen = () => getService().countWomen();
+export const getUserById = (id: number) => getService().getUserById(id);
+export const getUsersByDomain = (domain: string) => getService().getUsersByDomain(domain);
+export const addUsers = (users: UserDto[]) => getService().addUsers(users);

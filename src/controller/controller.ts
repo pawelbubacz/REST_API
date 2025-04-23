@@ -39,7 +39,7 @@ export const addUsers = async (req: Request, res: Response) => {
     const newUsers = req.body;
     const createdUsers = await userService.addUsers(newUsers);
     res.status(201).json(createdUsers);
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Failed to add users' });
   }
 };

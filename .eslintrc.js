@@ -20,7 +20,7 @@ module.exports = {
       'no-extra-semi': 'error',
       'no-const-assign': 'error',
       'eqeqeq': 'error',
-      'func-style': 'error',
+
       'require-await': 'error',
       'space-before-blocks': [
         'warn',

@@ -1,9 +1,16 @@
 import request from 'supertest';
-import app from '../../src/app';
+import initializeApp from '../../src/app';
+import { Express } from 'express';
 import * as userService from '../../src/databaseService/databaseService';
 import mockUsers from '../unit/mocked-users-tests/mocked-users-data';
 
 jest.mock('../../src/databaseService/databaseService');
+
+let app: Express;
+
+beforeAll(async () => {
+  app = await initializeApp();
+});
 
 describe('API Endpoints', () => {
   it('should return a welcome message', async () => {
@@ -22,6 +29,15 @@ describe('API Endpoints', () => {
     expect(response.status).toBe(200);
     expect(response.body).toEqual(filteredMockUsers);
     expect(response.body.every((user: { name: string }) => user.name === 'Jan')).toBe(true);
+  });
+
+  it('should return an empty array when no users match the filter', async () => {
+    (userService.getFilteredUsers as jest.Mock).mockResolvedValue([]);
+
+    const response = await request(app).get('/users?name=fakeName');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
   });
 
   it('should return the total user count', async () => {
@@ -50,6 +66,21 @@ describe('API Endpoints', () => {
 
     expect(response.status).toBe(200);
     expect(response.body).toEqual(mockUsers);
+  });
+
+  it('should return an empty array when no users match the domain', async () => {
+    (userService.getUsersByDomain as jest.Mock).mockResolvedValue([]);
+
+    const response = await request(app).get('/usersbydomain/nonexistent.com');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual([]);
+  });
+
+  it('should return a 404 code for an invalid endpoint', async () => {
+    const response = await request(app).get('/invalid-endpoint');
+
+    expect(response.status).toBe(404);
   });
 
   it('should add new users', async () => {

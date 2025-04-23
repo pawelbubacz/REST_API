@@ -3,26 +3,46 @@ import express from 'express';
 import * as userController from './controller/controller.ts';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
+import { MikroORM } from '@mikro-orm/core';
+import mikroOrmConfig from '../infrastructure/config/mikro-orm.config';
+import { setEntityManager } from './databaseService/databaseService';
 
-const swaggerDocument = YAML.load(path.resolve(__dirname, '../infrastructure/config/swagger.yaml'));
-const app = express();
-const port = 3000;
+export const DI = {} as {
+  orm: MikroORM,
+  em: MikroORM['em']
+};
 
-app.use(express.json());
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+const initializeApp = async () => {
+  try {
+    DI.orm = await MikroORM.init(mikroOrmConfig);
+    DI.em = DI.orm.em;
 
-app.get('/', userController.welcome);
-app.get('/users', userController.getUsers);
-app.get('/countusers', userController.countUsers);
-app.get('/countwomen', userController.countWomen);
-app.get('/userbyid/:id', userController.getUserById);
-app.get('/usersbydomain/:domain', userController.getUsersByDomain);
-app.post('/addusers', userController.addUsers);
+    setEntityManager(DI.em);
 
-export default app;
+    const swaggerDocument = YAML.load(path.resolve(__dirname, '../infrastructure/config/swagger.yaml'));
+    const app = express();
+    const port = 3000;
 
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+    app.use(express.json());
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+    app.get('/', userController.welcome);
+    app.get('/users', userController.getUsers);
+    app.get('/countusers', userController.countUsers);
+    app.get('/countwomen', userController.countWomen);
+    app.get('/userbyid/:id', userController.getUserById);
+    app.get('/usersbydomain/:domain', userController.getUsersByDomain);
+    app.post('/addusers', userController.addUsers);
+
+    app.listen(port, () => {
+      console.log(`Server running at http://localhost:${port}`);
+    });
+
+    return app;
+  } catch (error) {
+    console.error('Error during application initialization:', error);
+    throw error;
+  }
+};
+
+export default initializeApp;
