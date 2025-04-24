@@ -39,40 +39,25 @@ This project uses PostgreSQL as the database for storing user data. Ensure you h
   brew services start postgresql
 ```
 
-2. Create a Database and table:
+2. Create the database:
+- You only need to create the database itself manually (tables and data will be created automatically):
 - Access the PostgreSQL shell:
 ```bash
   psql postgres
 ```
-
-- Create a new database for the project:
+  Create the database:
 ```sql
-  CREATE DATABASE restful_users;
-```
-   
-- Connect to the newly created database:
-```sql
-  \c restful_users
+  CREATE DATABASE users;
 ```
 
-- Create a table named 'user_data' with the required columns:
-```sql
-  CREATE TABLE user_data (
-   id SERIAL PRIMARY KEY,
-   name VARCHAR(255) NOT NULL,
-   email VARCHAR(255) UNIQUE NOT NULL,
-   age INT NOT NULL
-   );
+3. Run migrations and seeders:
+- This will create the required tables and fill them with initial data:
+```bash
+  npx mikro-orm migration:up --config ./infrastructure/config/mikro-orm.config.ts
+  npx mikro-orm seeder:run --config ./infrastructure/config/mikro-orm.config.ts
 ```
 
-- Fill the table with records using:
-```sql
-  INSERT INTO user_data (name, email, age) VALUES
-  ('Jan Kowalski', 'jan.kowalski@example.com', 30)
-  ...
-```
-
-3. Configure the Database:
+4. Configure the Database:
 - Create the database connection settings in the configuration file located at src/data/db.ts:
 ```typescript
   import { Pool } from 'pg';

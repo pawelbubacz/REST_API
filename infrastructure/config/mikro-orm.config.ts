@@ -12,5 +12,14 @@ export default defineConfig({
   entitiesTs: ['./src/entities/*.ts'],
   metadataProvider: TsMorphMetadataProvider,
   debug: true,
-  allowGlobalContext: true
+  allowGlobalContext: true,
+  migrations: {
+    path: './infrastructure/migrations',
+    pathTs: './infrastructure/migrations',
+    glob: '!(*.d).{js,ts}'
+  },
+  seeder: {
+    path: './infrastructure/seeders',
+    pathTs: './infrastructure/seeders'
+  }
 });
