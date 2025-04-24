@@ -9,7 +9,7 @@ jest.mock('../../src/databaseService/databaseService');
 let app: Express;
 
 beforeAll(async () => {
-  app = await initializeApp();
+  app = await initializeApp({ skipDb: true });
 });
 
 describe('API Endpoints', () => {

@@ -12,12 +12,13 @@ export const DI = {} as {
   em: MikroORM['em']
 };
 
-const initializeApp = async () => {
+const initializeApp = async (options?: { skipDb?: boolean }) => {
   try {
-    DI.orm = await MikroORM.init(mikroOrmConfig);
-    DI.em = DI.orm.em;
-
-    setEntityManager(DI.em);
+    if (!options?.skipDb) {
+      DI.orm = await MikroORM.init(mikroOrmConfig);
+      DI.em = DI.orm.em;
+      setEntityManager(DI.em);
+    }
 
     const swaggerDocument = YAML.load(path.resolve(__dirname, '../infrastructure/config/swagger.yaml'));
     const app = express();
@@ -34,9 +35,11 @@ const initializeApp = async () => {
     app.get('/usersbydomain/:domain', userController.getUsersByDomain);
     app.post('/addusers', userController.addUsers);
 
-    app.listen(port, () => {
-      console.log(`Server running at http://localhost:${port}`);
-    });
+    if (!options?.skipDb) {
+      app.listen(port, () => {
+        console.log(`Server running at http://localhost:${port}`);
+      });
+    }
 
     return app;
   } catch (error) {
