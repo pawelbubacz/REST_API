@@ -5,7 +5,7 @@ import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import { MikroORM } from '@mikro-orm/core';
 import mikroOrmConfig from '../infrastructure/config/mikro-orm.config';
-import { setEntityManager } from './databaseService/databaseService';
+import { setEntityManager } from './database-service/database-service.ts';
 
 export const DI = {} as {
   orm: MikroORM,

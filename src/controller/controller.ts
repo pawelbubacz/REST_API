@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as userService from '../databaseService/databaseService.ts';
+import * as userService from '../database-service/database-service.ts';
 
 export const welcome = (req: Request, res: Response) => {
   res.send('Welcome to the Users API!');

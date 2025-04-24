@@ -1,10 +1,10 @@
 import request from 'supertest';
 import initializeApp from '../../src/app';
 import { Express } from 'express';
-import * as userService from '../../src/databaseService/databaseService';
+import * as userService from '../../src/database-service/database-service';
 import mockUsers from '../unit/mocked-users-tests/mocked-users-data';
 
-jest.mock('../../src/databaseService/databaseService');
+jest.mock('../../src/database-service/database-service');
 
 let app: Express;
 
