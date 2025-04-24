@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import * as userService from '../database-service/database-service.ts';
+import * as userService from '../database-service/database-service';
 
 export const welcome = (req: Request, res: Response) => {
   res.send('Welcome to the Users API!');
@@ -23,15 +23,24 @@ export const countWomen = async (req: Request, res: Response) => {
   res.json({ womenCount });
 };
 
-export const getUserById = async (req: Request, res: Response) => {
-  const user = await userService.getUserById(parseInt(req.params.id));
-  res.json(user);
-};
+export const getUser = async (req: Request, res: Response) => {
+  try {
+    const { id, domain } = req.query;
 
-export const getUsersByDomain = async (req: Request, res: Response) => {
-  const domain = req.params.domain;
-  const users = await userService.getUsersByDomain(domain);
-  res.json(users);
+    if (id) {
+      const user = await userService.getUserById(Number(id));
+      res.json(user);
+      return;
+    }
+    if (domain) {
+      const users = await userService.getUsersByDomain(String(domain));
+      res.json(users);
+      return;
+    }
+    res.status(400).json({ error: 'Missing id or domain parameter' });
+  } catch (error) {
+    res.status(500).json({ error: 'Internal server error' });
+  }
 };
 
 export const addUsers = async (req: Request, res: Response) => {

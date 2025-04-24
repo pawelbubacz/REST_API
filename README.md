@@ -11,8 +11,7 @@ This project is a RESTful API for managing user data. It's built using Node.js, 
   - GET /users: Retrieve all users, is also a queryable get.
   - GET /countusers: Count all users.
   - GET /countwomen: Count all female users.
-  - GET /userbyid/:id: Retrieve a user by ID.
-  - GET /usersbydomain/:domain: Retrieve users by email domain.
+  - GET /user: Retrieves users by their id or their email domain name.
   - 'POST /addusers': Add new users.
  
 ## Prerequisites

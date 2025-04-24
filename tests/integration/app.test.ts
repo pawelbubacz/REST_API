@@ -59,24 +59,6 @@ describe('API Endpoints', () => {
     expect(response.body.womenCount).toBe(womenCount);
   });
 
-  it('should fetch users by email domain', async () => {
-    (userService.getUsersByDomain as jest.Mock).mockResolvedValue(mockUsers);
-
-    const response = await request(app).get('/usersbydomain/example.com');
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual(mockUsers);
-  });
-
-  it('should return an empty array when no users match the domain', async () => {
-    (userService.getUsersByDomain as jest.Mock).mockResolvedValue([]);
-
-    const response = await request(app).get('/usersbydomain/nonexistent.com');
-
-    expect(response.status).toBe(200);
-    expect(response.body).toEqual([]);
-  });
-
   it('should return a 404 code for an invalid endpoint', async () => {
     const response = await request(app).get('/invalid-endpoint');
 

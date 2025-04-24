@@ -1,11 +1,11 @@
 import path from 'path';
 import express from 'express';
-import * as userController from './controller/controller.ts';
+import * as userController from './controller/controller';
 import swaggerUi from 'swagger-ui-express';
 import YAML from 'yamljs';
 import { MikroORM } from '@mikro-orm/core';
 import mikroOrmConfig from '../infrastructure/config/mikro-orm.config';
-import { setEntityManager } from './database-service/database-service.ts';
+import { setEntityManager } from './database-service/database-service';
 
 export const DI = {} as {
   orm: MikroORM,
@@ -20,7 +20,9 @@ const initializeApp = async (options?: { skipDb?: boolean }) => {
       setEntityManager(DI.em);
     }
 
-    const swaggerDocument = YAML.load(path.resolve(__dirname, '../infrastructure/config/swagger.yaml'));
+    const swaggerDocument = YAML.load(
+      path.resolve(process.cwd(), 'infrastructure/config/swagger.yaml')
+    );
     const app = express();
     const port = 3000;
 
@@ -31,8 +33,7 @@ const initializeApp = async (options?: { skipDb?: boolean }) => {
     app.get('/users', userController.getUsers);
     app.get('/countusers', userController.countUsers);
     app.get('/countwomen', userController.countWomen);
-    app.get('/userbyid/:id', userController.getUserById);
-    app.get('/usersbydomain/:domain', userController.getUsersByDomain);
+    app.get('/user', userController.getUser);
     app.post('/addusers', userController.addUsers);
 
     if (!options?.skipDb) {
@@ -49,3 +50,10 @@ const initializeApp = async (options?: { skipDb?: boolean }) => {
 };
 
 export default initializeApp;
+
+if (require.main === module) {
+  initializeApp().catch((err) => {
+    console.error('Failed to start server:', err);
+    process.exit(1);
+  });
+}
