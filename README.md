@@ -1,4 +1,4 @@
-## Resttful Users API
+## Restful Users API
 
 This project is a RESTful API for managing user data. It's built using Node.js, Express and it integrates Swagger for API documentation.
 
@@ -12,7 +12,7 @@ This project is a RESTful API for managing user data. It's built using Node.js, 
   - GET /countusers: Count all users.
   - GET /countwomen: Count all female users.
   - GET /user: Retrieves users by their id or their email domain name.
-  - 'POST /addusers': Add new users.
+  - POST /addusers: Add new users.
  
 ## Prerequisites
 
@@ -28,6 +28,11 @@ This project is a RESTful API for managing user data. It's built using Node.js, 
    cd restful-users
 ```
 
+2. Install dependencies:
+```bash
+   npm install
+```
+
 ## Database Setup
 
 This project uses PostgreSQL as the database for storing user data. Ensure you have PostgreSQL installed and running on your system.
@@ -39,41 +44,26 @@ This project uses PostgreSQL as the database for storing user data. Ensure you h
   brew services start postgresql
 ```
 
-2. Create the database:
-- You only need to create the database itself manually (tables and data will be created automatically):
-- Access the PostgreSQL shell:
+2. Configure Database Credentials:
+- Instead of editing credentials in the code, create a `.env` file in your project root with the following content:
+```
+DB_USER=your_user
+DB_PASSWORD=your_password
+DB_HOST=your_host(localhost usually)
+DB_PORT=your_port(5432 usually)
+DB_NAME=users
+```
+- The application and migration scripts will automatically use these environment variables.
+
+3. Run the Migration Script:
+- This will automatically create the users database (if it does not exist), create the required tables, and fill them with data.
+- Then run the migration:
 ```bash
-  psql postgres
+npx ts-node infrastructure/migrations/migrations.ts
 ```
-  Create the database:
-```sql
-  CREATE DATABASE users;
-```
+- If you see a message that the database already exists, the script will continue and apply the migrations.
 
-3. Run migrations and seeders:
-- This will create the required tables and fill them with initial data:
-```bash
-  npx mikro-orm migration:up --config ./infrastructure/config/mikro-orm.config.ts
-  npx mikro-orm seeder:run --config ./infrastructure/config/mikro-orm.config.ts
-```
-
-4. Configure the Database:
-- Create the database connection settings in the configuration file located at src/data/db.ts:
-```typescript
-  import { Pool } from 'pg';
-
-  const pool = new Pool({
-   user: 'test_user',
-   host: 'localhost',
-   database: 'test_db',
-   password: 'test_password',
-   port: 5432
-  });
-
-  export default pool;
-```
-
-5. Verify the Connection:
+4. Verify the Connection:
 - To verify there is a connection you can start the server:
 ```bash
   npm start
@@ -92,7 +82,7 @@ After starting the server, it's recommended that you interact with the API using
 ```
 - Retrieve a user by ID:
 ```bash
-  GET /userbyid/1
+  GET /user?id=4
 ```
 
 ## Testing
