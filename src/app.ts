@@ -6,7 +6,10 @@ import YAML from 'yamljs';
 import { MikroORM } from '@mikro-orm/core';
 import mikroOrmConfig from '../infrastructure/config/mikro-orm.config';
 import { setEntityManager } from './database-service/database-service';
-import logger from './logger';
+import { loggerInterface } from './logger/logger-interface';
+import { WinstonLogger } from './logger/winston-logger';
+
+const logger: loggerInterface = new WinstonLogger();
 
 export const DI = {} as {
   orm: MikroORM,
@@ -45,7 +48,7 @@ const initializeApp = async (options?: { skipDb?: boolean }) => {
 
     return app;
   } catch (error) {
-    logger.error('Error initializing app:', error);
+    logger.error(`Error initializing app: ${error}`);
     throw error;
   }
 };
@@ -54,7 +57,7 @@ export default initializeApp;
 
 if (require.main === module) {
   initializeApp().catch((error) => {
-    logger.error('Failed to start the application:', error);
+    logger.error(`Failed to start the application: ${error}`);
     process.exit(1);
   });
 }

@@ -1,5 +1,8 @@
 import { EntityManager, EntityRepository, wrap, FilterQuery } from '@mikro-orm/core';
-import logger from '../logger';
+import { loggerInterface } from '../logger/logger-interface';
+import { WinstonLogger } from '../logger/winston-logger';
+
+const logger: loggerInterface = new WinstonLogger();
 
 interface UserFilter {
   [key: string]: string;
@@ -41,9 +44,9 @@ class MikroOrmUserService implements IUserService {
     try {
       const users = await this.userRepository.find(filterQuery);
       return users;
-    } catch (err) {
-      logger.error('Error filtering users:', err);
-      throw err;
+    } catch (error) {
+      logger.error(`Error filtering users: ${error}`);
+      throw error;
     }
   }
 
@@ -51,9 +54,9 @@ class MikroOrmUserService implements IUserService {
     try {
       const count = await this.userRepository.count();
       return count;
-    } catch (err) {
-      logger.error('Error counting users:', err);
-      throw err;
+    } catch (error) {
+      logger.error(`Error counting users: ${error}`);
+      throw error;
     }
   }
 
@@ -63,9 +66,9 @@ class MikroOrmUserService implements IUserService {
         name: { $like: '%a' }
       });
       return count;
-    } catch (err) {
-      logger.error('Error counting women:', err);
-      throw err;
+    } catch (error) {
+      logger.error(`Error counting women: ${error}`);
+      throw error;
     }
   }
 
@@ -84,9 +87,9 @@ class MikroOrmUserService implements IUserService {
       }
 
       return user;
-    } catch (err) {
-      logger.error(`Error retrieving user by id ${id}:`, err);
-      throw err;
+    } catch (error) {
+      logger.error(`Error retrieving user by id ${id}: ${error}`);
+      throw error;
     }
   }
 
@@ -107,9 +110,9 @@ class MikroOrmUserService implements IUserService {
       }
 
       return users;
-    } catch (err) {
-      logger.error(`Error retrieving users by domain ${domain}:`, err);
-      throw err;
+    } catch (error) {
+      logger.error(`Error retrieving users by domain ${domain}: ${error}`);
+      throw error;
     }
   }
 
@@ -123,9 +126,9 @@ class MikroOrmUserService implements IUserService {
     try {
       await this.em.persistAndFlush(users);
       return users;
-    } catch (err) {
-      logger.error('Error adding users:', err);
-      throw err;
+    } catch (error) {
+      logger.error(`Error adding users: ${error}`);
+      throw error;
     }
   }
 }

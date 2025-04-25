@@ -1,4 +1,6 @@
 import winston from 'winston';
+import { loggerInterface } from './logger-interface';
+
 const { combine, timestamp, errors, printf } = winston.format;
 
 const customFormat = printf(({ level, message, timestamp, stack }) => {
@@ -12,7 +14,7 @@ const customFormat = printf(({ level, message, timestamp, stack }) => {
   return `${formattedTimestamp} [${level}]: ${stack || message}`;
 });
 
-const logger = winston.createLogger({
+const winstonLogger = winston.createLogger({
   level: process.env.LOG_LEVEL || 'info',
   format: combine(
     timestamp(),
@@ -22,4 +24,14 @@ const logger = winston.createLogger({
   transports: [new winston.transports.Console()]
 });
 
-export default logger;
+export class WinstonLogger implements loggerInterface {
+  info(message: string): void {
+    winstonLogger.info(message);
+  }
+  error(message: string): void {
+    winstonLogger.error(message);
+  }
+  debug(message: string): void {
+    winstonLogger.debug(message);
+  }
+}
