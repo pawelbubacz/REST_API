@@ -45,7 +45,7 @@ This project uses PostgreSQL as the database for storing user data. Ensure you h
 ```
 
 2. Configure Database Credentials:
-- Instead of editing credentials in the code, create a `.env` file in your project root with the following content:
+- Create a `.env` file in your project root with the following content:
 ```
 DB_USER=your_user
 DB_PASSWORD=your_password
@@ -68,13 +68,13 @@ npx ts-node infrastructure/migrations/migrations.ts
 ```bash
   npm start
 ```
-
   - Or you can run tests using:
 ```bash
   npm test
 ```
 
 ## Usage
+- The API will be available at `http://localhost:3000`.
 After starting the server, it's recommended that you interact with the API using tools like Postman or Insomnia. Below are some example requests:
 - Retrieve all users:
 ```bash
@@ -90,3 +90,28 @@ After starting the server, it's recommended that you interact with the API using
 ```bash
   npm test
 ```
+
+## Docker
+
+This project includes a `Dockerfile` and a `docker-compose.yml` for easy containerized setup.
+
+1. Start the Application with Docker Compose
+
+To build and start the API and PostgreSQL database together, run:
+
+```bash
+docker-compose up --build
+```
+
+- This command will build the Docker images and start both the API and the database.
+- The API will be available at `http://localhost:3000`.
+
+2. Stop the Application
+
+To stop the running containers, press `Ctrl+C` in the terminal where Docker Compose is running, then run:
+
+```bash
+docker-compose down
+```
+
+- This will stop and remove the containers, but your database data will be preserved in the Docker volume.
