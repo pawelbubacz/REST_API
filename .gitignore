@@ -1,6 +1,5 @@
 node_modules/
 dist/
 .env
-src/temp/
 tests/coverage/
 docker-compose.yaml
