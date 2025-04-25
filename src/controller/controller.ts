@@ -38,7 +38,7 @@ export const getUser = async (req: Request, res: Response) => {
       return;
     }
     res.status(400).json({ error: 'Missing id or domain parameter' });
-  } catch (error) {
+  } catch {
     res.status(500).json({ error: 'Internal server error' });
   }
 };

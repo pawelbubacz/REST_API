@@ -31,6 +31,24 @@ describe('API Endpoints', () => {
     expect(response.body.every((user: { name: string }) => user.name === 'Jan')).toBe(true);
   });
 
+  it('should fetch users by email domain', async () => {
+    (userService.getUsersByDomain as jest.Mock).mockResolvedValue(mockUsers);
+
+    const response = await request(app).get('/user?domain=example');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(mockUsers);
+  });
+
+  it('should fetch users by id', async () => {
+    (userService.getUserById as jest.Mock).mockResolvedValue(mockUsers);
+
+    const response = await request(app).get('/user?id=3');
+
+    expect(response.status).toBe(200);
+    expect(response.body).toEqual(mockUsers);
+  });
+
   it('should return an empty array when no users match the filter', async () => {
     (userService.getFilteredUsers as jest.Mock).mockResolvedValue([]);
 
