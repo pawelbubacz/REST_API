@@ -6,6 +6,7 @@ import YAML from 'yamljs';
 import { MikroORM } from '@mikro-orm/core';
 import mikroOrmConfig from '../infrastructure/config/mikro-orm.config';
 import { setEntityManager } from './database-service/database-service';
+import logger from './logger';
 
 export const DI = {} as {
   orm: MikroORM,
@@ -38,13 +39,13 @@ const initializeApp = async (options?: { skipDb?: boolean }) => {
 
     if (!options?.skipDb) {
       app.listen(port, () => {
-        console.log(`Server running at http://localhost:${port}`);
+        logger.info(`Server is running on http://localhost:${port}`);
       });
     }
 
     return app;
   } catch (error) {
-    console.error('Error during application initialization:', error);
+    logger.error('Error initializing app:', error);
     throw error;
   }
 };
@@ -52,8 +53,8 @@ const initializeApp = async (options?: { skipDb?: boolean }) => {
 export default initializeApp;
 
 if (require.main === module) {
-  initializeApp().catch((err) => {
-    console.error('Failed to start server:', err);
+  initializeApp().catch((error) => {
+    logger.error('Failed to start the application:', error);
     process.exit(1);
   });
 }
