@@ -32,6 +32,7 @@ const initializeApp = async (options?: { skipDb?: boolean }) => {
     const swaggerDocument = YAML.load(
       path.resolve(process.cwd(), 'infrastructure/config/swagger.yaml')
     );
+
     const app = express();
     const port = 3000;
 
@@ -44,6 +45,7 @@ const initializeApp = async (options?: { skipDb?: boolean }) => {
     app.get('/countwomen', userController.countWomen);
     app.get('/user', userController.getUser);
     app.post('/addusers', userController.addUsers);
+    app.delete('/user/:id', userController.deleteUser);
 
     if (!options?.skipDb) {
       app.listen(port, () => {

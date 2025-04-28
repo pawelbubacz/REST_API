@@ -90,3 +90,15 @@ export const addUsers = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Failed to add users' });
   }
 };
+
+export const deleteUser = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    logger.info(`deleteUser called with id: ${id}`);
+    await userService.deleteUserById(id);
+    res.status(204).send();
+  } catch (error) {
+    logger.error(`Error in deleteUser: ${error}`);
+    res.status(404).json({ error: (error as Error).message });
+  }
+};

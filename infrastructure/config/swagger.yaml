@@ -133,3 +133,21 @@ paths:
                   $ref: '#/components/schemas/User'
         '500':
           description: Failed to add users
+  /user/{id}:
+    delete:
+      summary: Delete user by ID
+      description: Deletes a user with the specified ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+          description: The ID of the user to delete
+      responses:
+        '204':
+          description: User deleted successfully (no content)
+        '404':
+          description: User not found
+        '500':
+          description: Internal server error

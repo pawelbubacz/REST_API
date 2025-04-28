@@ -1,6 +1,7 @@
 import { EntityManager, EntityRepository, wrap, FilterQuery } from '@mikro-orm/core';
 import { loggerInterface } from '../logger/logger-interface';
 import { WinstonLogger } from '../logger/winston-logger';
+import { User } from '../entities/entity';
 
 const logger: loggerInterface = new WinstonLogger();
 
@@ -22,8 +23,6 @@ interface UserDto {
   email: string;
   age: number;
 }
-
-import { User } from '../entities/entity';
 
 class MikroOrmUserService implements IUserService {
   private userRepository: EntityRepository<User>;
@@ -131,6 +130,25 @@ class MikroOrmUserService implements IUserService {
       throw new Error('Error adding users');
     }
   }
+
+  async deleteUserById(id: number): Promise<void> {
+    if (isNaN(id)) {
+      logger.error('Id has to be a number');
+      throw new Error('Id has to be a number');
+    }
+    try {
+      const user = await this.userRepository.findOne({ id });
+      if (!user) {
+        logger.error(`User with id ${id} not found`);
+        throw new Error(`User with id ${id} not found`);
+      }
+      await this.em.removeAndFlush(user);
+      logger.info(`User with id ${id} deleted`);
+    } catch (error) {
+      logger.error(`Error deleting user by id ${id}: ${error}`);
+      throw new Error(`Error deleting user by id ${id}`);
+    }
+  }
 }
 
 let userService: MikroOrmUserService | null = null;
@@ -153,3 +171,4 @@ export const countWomen = () => getService().countWomen();
 export const getUserById = (id: number) => getService().getUserById(id);
 export const getUsersByDomain = (domain: string) => getService().getUsersByDomain(domain);
 export const addUsers = (users: UserDto[]) => getService().addUsers(users);
+export const deleteUserById = (id: number) => getService().deleteUserById(id);
