@@ -18,10 +18,15 @@ export const DI = {} as {
 
 const initializeApp = async (options?: { skipDb?: boolean }) => {
   try {
+    logger.debug('Initializing application...');
     if (!options?.skipDb) {
+      logger.debug('Initializing MikroORM...');
       DI.orm = await MikroORM.init(mikroOrmConfig);
       DI.em = DI.orm.em;
       setEntityManager(DI.em);
+      logger.debug('MikroORM initialized and entity manager set.');
+    } else {
+      logger.debug('Skipping DB initialization as per options.');
     }
 
     const swaggerDocument = YAML.load(
@@ -46,6 +51,7 @@ const initializeApp = async (options?: { skipDb?: boolean }) => {
       });
     }
 
+    logger.debug('Application initialized successfully.');
     return app;
   } catch (error) {
     logger.error(`Error initializing app: ${error}`);

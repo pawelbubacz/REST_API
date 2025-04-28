@@ -12,11 +12,13 @@ export const welcome = (req: Request, res: Response) => {
 
 export const getUsers = async (req: Request, res: Response) => {
   try {
+    logger.debug(`getUsers called with query: ${JSON.stringify(req.query)}`);
     const filters = Object.fromEntries(
       Object.entries(req.query).map(([key, value]) => [key, String(value)])
     );
     logger.info(`getUsers called with filters: ${JSON.stringify(filters)}`);
     const users = await userService.getFilteredUsers(filters);
+    logger.debug(`getUsers found ${users.length} users`);
     res.json(users);
   } catch (error) {
     logger.error(`Error in getUsers: ${error}`);
@@ -28,6 +30,7 @@ export const countUsers = async (req: Request, res: Response) => {
   try {
     logger.info('countUsers endpoint called');
     const userCount = await userService.countUsers();
+    logger.debug(`countUsers result: ${userCount}`);
     res.json({ userCount });
   } catch (error) {
     logger.error(`Error in countUsers: ${error}`);
@@ -39,6 +42,7 @@ export const countWomen = async (req: Request, res: Response) => {
   try {
     logger.info('countWomen endpoint called');
     const womenCount = await userService.countWomen();
+    logger.debug(`countWomen result: ${womenCount}`);
     res.json({ womenCount });
   } catch (error) {
     logger.error(`Error in countWomen: ${error}`);
@@ -48,17 +52,20 @@ export const countWomen = async (req: Request, res: Response) => {
 
 export const getUser = async (req: Request, res: Response) => {
   try {
+    logger.debug(`getUser called with query: ${JSON.stringify(req.query)}`);
     const { id, domain } = req.query;
 
     if (id) {
       logger.info(`getUser called with id: ${id}`);
       const user = await userService.getUserById(Number(id));
+      logger.debug(`getUserById result: ${JSON.stringify(user)}`);
       res.json(user);
       return;
     }
     if (domain) {
       logger.info(`getUser called with domain: ${domain}`);
       const users = await userService.getUsersByDomain(String(domain));
+      logger.debug(`getUsersByDomain found ${users.length} users`);
       res.json(users);
       return;
     }
@@ -74,7 +81,9 @@ export const addUsers = async (req: Request, res: Response) => {
   try {
     logger.info(`addUsers called with body: ${JSON.stringify(req.body)}`);
     const newUsers = req.body;
+    logger.debug(`Calling addUsers with ${Array.isArray(newUsers) ? newUsers.length : 0} users`);
     const createdUsers = await userService.addUsers(newUsers);
+    logger.debug(`addUsers created ${createdUsers.length} users`);
     res.status(201).json(createdUsers);
   } catch (error) {
     logger.error(`Error in addUsers: ${error}`);

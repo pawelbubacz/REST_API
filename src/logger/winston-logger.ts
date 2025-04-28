@@ -14,8 +14,11 @@ const customFormat = printf(({ level, message, timestamp, stack }) => {
   return `${formattedTimestamp} [${level}]: ${stack || message}`;
 });
 
+const env = process.env.NODE_ENV || 'production';
+const logLevel = env === 'development' ? 'debug' : (process.env.LOG_LEVEL || 'info');
+
 const winstonLogger = winston.createLogger({
-  level: process.env.LOG_LEVEL || 'info',
+  level: logLevel,
   format: combine(
     timestamp(),
     errors({ stack: true }),
