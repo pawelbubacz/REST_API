@@ -55,7 +55,7 @@ const initializeApp = async (options?: { skipDb?: boolean }) => {
     return app;
   } catch (error) {
     logger.error(`Error initializing app: ${error}`);
-    throw error;
+    throw new Error('Failed to initialize app:');
   }
 };
 
