@@ -8,11 +8,12 @@ This project is a RESTful API for managing user data. It's built using Node.js, 
 - Swagger documentation: Interactive API documentation available at '/api-docs'.
 - Endpoints:
   - GET /: Welcome message.
-  - GET /users: Retrieve all users, is also a queryable get.
+  - GET /users: Retrieve all users, also by their name, email or age range.
   - GET /countusers: Count all users.
   - GET /countwomen: Count all female users.
   - GET /user: Retrieves users by their id or their email domain name.
   - POST /addusers: Add new users.
+  - DELETE /user: Deletes a user of a given id.
  
 ## Prerequisites
 

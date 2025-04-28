@@ -1,5 +1,9 @@
 import { EntityManager, EntityRepository, wrap, FilterQuery } from '@mikro-orm/core';
-import logger from '../logger';
+import { loggerInterface } from '../logger/logger-interface';
+import { WinstonLogger } from '../logger/winston-logger';
+import { User } from '../entities/entity';
+
+const logger: loggerInterface = new WinstonLogger();
 
 interface UserFilter {
   [key: string]: string;
@@ -20,8 +24,6 @@ interface UserDto {
   age: number;
 }
 
-import { User } from '../entities/entity';
-
 class MikroOrmUserService implements IUserService {
   private userRepository: EntityRepository<User>;
   private em: EntityManager;
@@ -34,6 +36,18 @@ class MikroOrmUserService implements IUserService {
   async getFilteredUsers(filters: UserFilter): Promise<User[]> {
     const filterQuery: FilterQuery<User> = {};
 
+    if (filters.minAge || filters.maxAge) {
+      filterQuery.age = {};
+      if (filters.minAge) {
+        filterQuery.age.$gte = Number(filters.minAge);
+      }
+      if (filters.maxAge) {
+        filterQuery.age.$lte = Number(filters.maxAge);
+      }
+      delete filters.minAge;
+      delete filters.maxAge;
+    }
+
     Object.entries(filters).forEach(([key, value]) => {
       (filterQuery as Record<string, { $ilike: string }>)[key] = { $ilike: `%${value}%` };
     });
@@ -41,9 +55,9 @@ class MikroOrmUserService implements IUserService {
     try {
       const users = await this.userRepository.find(filterQuery);
       return users;
-    } catch (err) {
-      logger.error('Error filtering users:', err);
-      throw err;
+    } catch (error) {
+      logger.error(`Error filtering users: ${error}`);
+      throw new Error('Error filtering users');
     }
   }
 
@@ -51,9 +65,9 @@ class MikroOrmUserService implements IUserService {
     try {
       const count = await this.userRepository.count();
       return count;
-    } catch (err) {
-      logger.error('Error counting users:', err);
-      throw err;
+    } catch (error) {
+      logger.error(`Error counting users: ${error}`);
+      throw new Error('Error counting users');
     }
   }
 
@@ -63,9 +77,9 @@ class MikroOrmUserService implements IUserService {
         name: { $like: '%a' }
       });
       return count;
-    } catch (err) {
-      logger.error('Error counting women:', err);
-      throw err;
+    } catch (error) {
+      logger.error(`Error counting women: ${error}`);
+      throw new Error('Error counting women');
     }
   }
 
@@ -84,9 +98,9 @@ class MikroOrmUserService implements IUserService {
       }
 
       return user;
-    } catch (err) {
-      logger.error(`Error retrieving user by id ${id}:`, err);
-      throw err;
+    } catch (error) {
+      logger.error(`Error retrieving user by id ${id}: ${error}`);
+      throw error;
     }
   }
 
@@ -107,9 +121,9 @@ class MikroOrmUserService implements IUserService {
       }
 
       return users;
-    } catch (err) {
-      logger.error(`Error retrieving users by domain ${domain}:`, err);
-      throw err;
+    } catch (error) {
+      logger.error(`Error retrieving users by domain ${domain}: ${error}`);
+      throw new Error(`Error retrieving users by domain ${domain}`);
     }
   }
 
@@ -123,9 +137,28 @@ class MikroOrmUserService implements IUserService {
     try {
       await this.em.persistAndFlush(users);
       return users;
-    } catch (err) {
-      logger.error('Error adding users:', err);
-      throw err;
+    } catch (error) {
+      logger.error(`Error adding users: ${error}`);
+      throw new Error('Error adding users');
+    }
+  }
+
+  async deleteUserById(id: number): Promise<void> {
+    if (isNaN(id)) {
+      logger.error('Id has to be a number');
+      throw new Error('Id has to be a number');
+    }
+    try {
+      const user = await this.userRepository.findOne({ id });
+      if (!user) {
+        logger.error(`User with id ${id} not found`);
+        throw new Error(`User with id ${id} not found`);
+      }
+      await this.em.removeAndFlush(user);
+      logger.info(`User with id ${id} deleted`);
+    } catch (error) {
+      logger.error(`Error deleting user by id ${id}: ${error}`);
+      throw new Error(`Error deleting user by id ${id}`);
     }
   }
 }
@@ -150,3 +183,4 @@ export const countWomen = () => getService().countWomen();
 export const getUserById = (id: number) => getService().getUserById(id);
 export const getUsersByDomain = (domain: string) => getService().getUsersByDomain(domain);
 export const addUsers = (users: UserDto[]) => getService().addUsers(users);
+export const deleteUserById = (id: number) => getService().deleteUserById(id);

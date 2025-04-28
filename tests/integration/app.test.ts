@@ -102,3 +102,34 @@ describe('API Endpoints', () => {
     expect(response.body).toEqual({ error: 'Failed to add users' });
   });
 });
+
+it('should delete a user by id', async () => {
+  (userService.deleteUserById as jest.Mock).mockResolvedValue(undefined);
+
+  const response = await request(app).delete('/user/3');
+
+  expect(response.status).toBe(204);
+  expect(userService.deleteUserById).toHaveBeenCalledWith(3);
+});
+
+it('should return 404 if user to delete is not found', async () => {
+  (userService.deleteUserById as jest.Mock).mockRejectedValue(new Error('User with id 999 not found'));
+
+  const response = await request(app).delete('/user/999');
+
+  expect(response.status).toBe(404);
+  expect(response.body).toEqual({ error: 'User with id 999 not found' });
+});
+
+it('should fetch users within an age range', async () => {
+  const filteredUsers = mockUsers.filter(
+    (user: { age: number }) => user.age >= 20 && user.age <= 30
+  );
+  (userService.getFilteredUsers as jest.Mock).mockResolvedValue(filteredUsers);
+
+  const response = await request(app).get('/users?minAge=20&maxAge=30');
+
+  expect(response.status).toBe(200);
+  expect(response.body).toEqual(filteredUsers);
+  expect(response.body.every((user: { age: number }) => user.age >= 20 && user.age <= 30)).toBe(true);
+});
