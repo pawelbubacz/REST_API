@@ -36,6 +36,18 @@ class MikroOrmUserService implements IUserService {
   async getFilteredUsers(filters: UserFilter): Promise<User[]> {
     const filterQuery: FilterQuery<User> = {};
 
+    if (filters.minAge || filters.maxAge) {
+      filterQuery.age = {};
+      if (filters.minAge) {
+        filterQuery.age.$gte = Number(filters.minAge);
+      }
+      if (filters.maxAge) {
+        filterQuery.age.$lte = Number(filters.maxAge);
+      }
+      delete filters.minAge;
+      delete filters.maxAge;
+    }
+
     Object.entries(filters).forEach(([key, value]) => {
       (filterQuery as Record<string, { $ilike: string }>)[key] = { $ilike: `%${value}%` };
     });

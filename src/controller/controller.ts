@@ -13,9 +13,21 @@ export const welcome = (req: Request, res: Response) => {
 export const getUsers = async (req: Request, res: Response) => {
   try {
     logger.debug(`getUsers called with query: ${JSON.stringify(req.query)}`);
+    const { minAge, maxAge, ...otherFilters } = req.query;
+
     const filters = Object.fromEntries(
-      Object.entries(req.query).map(([key, value]) => [key, String(value)])
+      Object.entries(otherFilters).map(([key, value]) => [key, String(value)])
     );
+
+    if (minAge || maxAge) {
+      if (minAge) {
+        filters['minAge'] = String(minAge);
+      }
+      if (maxAge) {
+        filters['maxAge'] = String(maxAge);
+      }
+    }
+
     logger.info(`getUsers called with filters: ${JSON.stringify(filters)}`);
     const users = await userService.getFilteredUsers(filters);
     logger.debug(`getUsers found ${users.length} users`);
