@@ -46,7 +46,7 @@ class MikroOrmUserService implements IUserService {
       return users;
     } catch (error) {
       logger.error(`Error filtering users: ${error}`);
-      throw error;
+      throw new Error('Error filtering users');
     }
   }
 
@@ -56,7 +56,7 @@ class MikroOrmUserService implements IUserService {
       return count;
     } catch (error) {
       logger.error(`Error counting users: ${error}`);
-      throw error;
+      throw new Error('Error counting users');
     }
   }
 
@@ -68,7 +68,7 @@ class MikroOrmUserService implements IUserService {
       return count;
     } catch (error) {
       logger.error(`Error counting women: ${error}`);
-      throw error;
+      throw new Error('Error counting women');
     }
   }
 
@@ -112,7 +112,7 @@ class MikroOrmUserService implements IUserService {
       return users;
     } catch (error) {
       logger.error(`Error retrieving users by domain ${domain}: ${error}`);
-      throw error;
+      throw new Error(`Error retrieving users by domain ${domain}`);
     }
   }
 
@@ -128,7 +128,7 @@ class MikroOrmUserService implements IUserService {
       return users;
     } catch (error) {
       logger.error(`Error adding users: ${error}`);
-      throw error;
+      throw new Error('Error adding users');
     }
   }
 }
