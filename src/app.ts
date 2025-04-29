@@ -44,7 +44,7 @@ const initializeApp = async (options?: { skipDb?: boolean }) => {
     app.get('/countusers', userController.countUsers);
     app.get('/countwomen', userController.countWomen);
     app.get('/user', userController.getUser);
-    app.post('/addusers', userController.addUsers);
+    app.post('/adduser', userController.addUsers);
     app.delete('/user/:id', userController.deleteUser);
 
     if (!options?.skipDb) {
