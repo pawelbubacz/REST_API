@@ -46,6 +46,7 @@ const initializeApp = async (options?: { skipDb?: boolean }) => {
     app.get('/user', userController.getUser);
     app.post('/adduser', userController.addUsers);
     app.delete('/user/:id', userController.deleteUser);
+    app.patch('/user/:id', userController.updateUser);
 
     if (!options?.skipDb) {
       app.listen(port, () => {

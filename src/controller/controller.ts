@@ -111,6 +111,22 @@ export const deleteUser = async (req: Request, res: Response) => {
     res.status(204).send();
   } catch (error) {
     logger.error(`Error in deleteUser: ${error}`);
-    res.status(404).json({ error: (error as Error).message });
+    res.status(404).json({ error: 'Failed to delete user' });
+  }
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    logger.info(`updateUser called with id: ${id} and body: ${JSON.stringify(req.body)}`);
+    const updateResult = await userService.updateUserById(id, req.body);
+    if (updateResult !== undefined && updateResult !== null) {
+        res.json(updateResult);
+    } else {
+        res.status(404).json({ error: 'User not found or update failed' });
+    }
+  } catch (error) {
+    logger.error(`Error in updateUser: ${error}`);
+    res.status(404).json({ error: 'Failed to update users' });
   }
 };

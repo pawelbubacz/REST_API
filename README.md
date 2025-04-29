@@ -20,6 +20,7 @@ This project is a RESTful API for managing user data. It's built using Node.js, 
     - ``GET /user?domain=mail`` — users with "mail" in their email domain.
 - `POST /adduser` — Add a new user.
 - `DELETE /user` — Delete a user by ID.
+- `PATCH /user/:id` — Update a user by ID.
  
 ## Prerequisites
 

@@ -138,3 +138,15 @@ it('should fetch users within an age range', async () => {
   expect(response.body).toEqual(expectedUsers);
   expect(response.body.every((user: { age: number }) => user.age >= 20 && user.age <= 30)).toBe(true);
 });
+
+it('updates a user and returns the updated user', async () => {
+  const user = mockUsers[0];
+  const update = { name: 'Updated Name' };
+  const updatedUser = { ...user, ...update };
+  (userService.updateUserById as jest.Mock).mockResolvedValue(updatedUser);
+
+  const res = await request(app).patch(`/user/${user.id}`).send(update);
+
+  expect(res.status).toBe(200);
+  expect(res.body).toEqual(updatedUser);
+});

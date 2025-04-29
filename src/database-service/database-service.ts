@@ -169,6 +169,27 @@ class MikroOrmUserService implements IUserService {
       throw new Error(`Error deleting user by id ${id}`);
     }
   }
+
+  async updateUserById(id: number, update: Partial<UserDto>): Promise<User> {
+    if (isNaN(id)) {
+      logger.error('Id has to be a number');
+      throw new Error('Id has to be a number');
+    }
+    try {
+      const user = await this.userRepository.findOne({ id });
+      if (!user) {
+        logger.error(`User with id ${id} not found`);
+        throw new Error(`User with id ${id} not found`);
+      }
+      wrap(user).assign(update);
+      await this.em.persistAndFlush(user);
+      logger.info(`User with id ${id} updated`);
+      return user;
+    } catch (error) {
+      logger.error(`Error updating user by id ${id}: ${error}`);
+      throw new Error(`Error updating user by id ${id}`);
+    }
+  }
 }
 
 let userService: MikroOrmUserService | null = null;
@@ -192,3 +213,4 @@ export const getUserById = (id: number) => getService().getUserById(id);
 export const getUsersByDomain = (domain: string) => getService().getUsersByDomain(domain);
 export const addUsers = (users: UserDto[]) => getService().addUsers(users);
 export const deleteUserById = (id: number) => getService().deleteUserById(id);
+export const updateUserById = (id: number, update: Partial<UserDto>) => getService().updateUserById(id, update);
