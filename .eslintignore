@@ -2,3 +2,4 @@ dist/
 .eslintrc.js
 infrastructure/migrations/*
 infrastructure/seeders/*
+tests/integration/*

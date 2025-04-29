@@ -134,6 +134,14 @@ class MikroOrmUserService implements IUserService {
       return user;
     });
 
+    const emailRegex = /\S+@\S+\.\S+/;
+
+    for (const dto of userDtos) {
+      if (!emailRegex.test(dto.email)) {
+        throw new Error(`Invalid email: ${dto.email}`);
+      }
+    }
+
     try {
       await this.em.persistAndFlush(users);
       return users;
