@@ -7,19 +7,19 @@ This project is a RESTful API for managing user data. It's built using Node.js, 
 - User management: Retrieve, count, and add users.
 - Swagger documentation: Interactive API documentation available at '/api-docs'.
 - Endpoints:
-  - GET /: Welcome message.
-  - GET /users: Retrieve all users, also by their name, email or age range.
-    - Query examples:
-      - `/users?name=Patryk` — retrieves users with the name "Patryk".
-      - `/users?minAge=20&maxAge=30` — retrieves users aged between 20 and 30.
-  - GET /countusers: Count all users.
-  - GET /countwomen: Count all female users.
-  - GET /user: Retrieves users by their id or their email domain name.
-    - Query examples:
-      - `/user?id=5` — retrieves the user with ID 5.
-      - `/user?domain=mail` — retrieves users whose email domain contains "mail".
-  - POST /adduser: Add new users.
-  - DELETE /user: Deletes a user of a given id.
+- `GET /` — Welcome message.
+- `GET /users` — Retrieve all users, or filter by name, email, or age range.
+  - Examples:
+    - ``GET /users?name=Patryk`` — users with the name "Patryk".
+    - ``GET /users?minAge=20&maxAge=30`` — users aged 20–30.
+- `GET /countusers` — Count all users.
+- `GET /countwomen` — Count all female users.
+- `GET /user` — Retrieve users by ID or email domain.
+  - Examples:
+    - ``GET /user?id=5`` — user with ID 5.
+    - ``GET /user?domain=mail`` — users with "mail" in their email domain.
+- `POST /adduser` — Add a new user.
+- `DELETE /user` — Delete a user by ID.
  
 ## Prerequisites
 
