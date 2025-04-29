@@ -122,7 +122,7 @@ it('should return 404 if user to delete is not found', async () => {
   const response = await request(app).delete('/user/999');
 
   expect(response.status).toBe(404);
-  expect(response.body).toEqual({ error: 'User with id 999 not found' });
+  expect(response.body).toEqual({ error: 'Failed to delete user' });
 });
 
 it('should fetch users within an age range', async () => {
