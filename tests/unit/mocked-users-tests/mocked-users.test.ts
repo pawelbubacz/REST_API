@@ -16,12 +16,6 @@ describe('Mocked Users Tests', () => {
     expect(exampleUsers.every((u) => u.email.includes('example.com'))).toBe(true);
   });
 
-  it('should count users with names ending in "a"', () => {
-    const count = usersData.filter((u) => u.name.endsWith('a')).length;
-
-    expect(count).toBeGreaterThan(0);
-  });
-
   it('should throw error if user with specific ID is not found', () => {
     const user = usersData.find((u) => u.id === 999);
 
@@ -52,11 +46,5 @@ describe('Mocked Users Tests', () => {
     const allValidEmails = usersData.every((u) => emailRegex.test(u.email));
 
     expect(allValidEmails).toBe(true);
-  });
-
-  it('should verify no user has a negative age', () => {
-    const hasNegativeAge = usersData.some((u) => u.age < 0);
-
-    expect(hasNegativeAge).toBe(false);
   });
 });

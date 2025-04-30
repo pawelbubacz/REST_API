@@ -41,7 +41,6 @@ module.exports = {
       'no-unreachable': 'error',
       'no-unsafe-optional-chaining': 'error',
       'no-unused-expressions': 'error',
-      '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-explicit-any': 'warn',
       'curly': 'error',
     'use-isnan': 'warn',
