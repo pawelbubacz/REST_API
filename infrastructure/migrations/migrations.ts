@@ -5,9 +5,10 @@ dotenv.config();
 
 const logger = new WinstonLogger();
 
-const DB_NAME = 'users';
+const DB_NAME = 'users_test';
 
 async function createDatabase() {
+  logger.info('Connecting to PostgreSQL to create database...');
   const client = new Client({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
@@ -17,12 +18,16 @@ async function createDatabase() {
   });
 
   await client.connect();
+  logger.info('Connected to PostgreSQL.');
+  logger.info(`Attempting to create database "${DB_NAME}"...`);
   await client.query(`CREATE DATABASE ${DB_NAME} WITH ENCODING 'UTF8'`);
-  await client.end();
   logger.info(`Database "${DB_NAME}" created.`);
+  await client.end();
+  logger.info('Disconnected from PostgreSQL after database creation.');
 }
 
 async function migrate() {
+  logger.info(`Connecting to "${DB_NAME}" database for migration...`);
   const client = new Client({
     user: process.env.DB_USER,
     host: process.env.DB_HOST,
@@ -32,6 +37,9 @@ async function migrate() {
   });
 
   await client.connect();
+  logger.info('Connected to database.');
+
+  logger.info('Creating table "user_data" if not exists...');
   await client.query(`
     CREATE TABLE IF NOT EXISTS user_data (
       id SERIAL PRIMARY KEY,
@@ -41,6 +49,7 @@ async function migrate() {
     );
   `);
 
+  logger.info('Inserting initial user data...');
   await client.query(`
     INSERT INTO user_data (name, email, age) VALUES
 ('Jan Kowalski', 'jan.kowalski@example.com', 30),
@@ -124,22 +133,25 @@ async function migrate() {
 ('Anna Gajda', 'anna.gajda@example.com', 40),
 ('Mariusz Sobczak', 'mariusz.sobczak@mail.com', 42);
   `);
+  logger.info('Initial user data inserted.');
 
   await client.end();
-  logger.info('Migration completed successfully.');
 }
 
 async function main() {
+  logger.info('Starting migration process...');
   try {
     await createDatabase();
   } catch (e: any) {
     if (!/already exists/.test(e.message)) {
+      logger.error(`Failed to create database: ${e.message}`);
       throw e;
     } else {
       logger.error('Database already exists, proceeding with migration...');
     }
   }
   await migrate();
+  logger.info('Migration process finished.');
 }
 
 main().catch(error => {
