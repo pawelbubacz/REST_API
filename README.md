@@ -57,8 +57,8 @@ This project uses PostgreSQL as the database for storing user data. Ensure you h
 ```
 DB_USER=your_user
 DB_PASSWORD=your_password
-DB_HOST=your_host(localhost if running locally, postgres when running with Docker)
-DB_PORT=your_port(5432 usually)
+DB_HOST=your_host <!-- localhost usually -->
+DB_PORT=your_port <!-- 5432 usually -->
 DB_NAME=users
 ```
 - The application and migration scripts will automatically use these environment variables.
