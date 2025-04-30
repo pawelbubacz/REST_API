@@ -35,18 +35,21 @@ describe('API Endpoints', () => {
     (userService.getUsersByDomain as jest.Mock).mockResolvedValue(mockUsers);
 
     const response = await request(app).get('/user?domain=example');
+    const expectedUsers = mockUsers.map(({ id, ...rest }) => rest);
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual(mockUsers);
+    expect(response.body).toEqual(expectedUsers);
   });
 
-  it('should fetch users by id', async () => {
-    (userService.getUserById as jest.Mock).mockResolvedValue(mockUsers);
+  it('should fetch a user by id', async () => {
+    const user = mockUsers[0];
+    (userService.getUserById as jest.Mock).mockResolvedValue(user);
 
-    const response = await request(app).get('/user?id=3');
+    const response = await request(app).get(`/user?id=${user.id}`);
+    const { id, ...expectedUser } = user;
 
     expect(response.status).toBe(200);
-    expect(response.body).toEqual(mockUsers);
+    expect(response.body).toEqual(expectedUser);
   });
 
   it('should return an empty array when no users match the filter', async () => {
@@ -87,16 +90,17 @@ describe('API Endpoints', () => {
     const createdUsers = mockUsers;
     (userService.addUsers as jest.Mock).mockResolvedValue(createdUsers);
 
-    const response = await request(app).post('/addusers').send(mockUsers);
+    const response = await request(app).post('/adduser').send(mockUsers);
+    const expectedUsers = createdUsers.map(({ id, ...rest }) => rest);
 
     expect(response.status).toBe(201);
-    expect(response.body).toEqual(createdUsers);
+    expect(response.body).toEqual(expectedUsers);
   });
 
   it('should handle errors when adding users', async () => {
     (userService.addUsers as jest.Mock).mockRejectedValue(new Error('Database error'));
 
-    const response = await request(app).post('/addusers').send([]);
+    const response = await request(app).post('/adduser').send([]);
 
     expect(response.status).toBe(500);
     expect(response.body).toEqual({ error: 'Failed to add users' });
@@ -118,7 +122,7 @@ it('should return 404 if user to delete is not found', async () => {
   const response = await request(app).delete('/user/999');
 
   expect(response.status).toBe(404);
-  expect(response.body).toEqual({ error: 'User with id 999 not found' });
+  expect(response.body).toEqual({ error: 'Failed to delete user' });
 });
 
 it('should fetch users within an age range', async () => {
@@ -126,10 +130,23 @@ it('should fetch users within an age range', async () => {
     (user: { age: number }) => user.age >= 20 && user.age <= 30
   );
   (userService.getFilteredUsers as jest.Mock).mockResolvedValue(filteredUsers);
+  const expectedUsers = filteredUsers.map(({ id, ...rest }) => rest);
 
   const response = await request(app).get('/users?minAge=20&maxAge=30');
 
   expect(response.status).toBe(200);
-  expect(response.body).toEqual(filteredUsers);
+  expect(response.body).toEqual(expectedUsers);
   expect(response.body.every((user: { age: number }) => user.age >= 20 && user.age <= 30)).toBe(true);
+});
+
+it('updates a user and returns the updated user', async () => {
+  const user = mockUsers[0];
+  const update = { name: 'Updated Name' };
+  const updatedUser = { ...user, ...update };
+  (userService.updateUserById as jest.Mock).mockResolvedValue(updatedUser);
+
+  const res = await request(app).patch(`/user/${user.id}`).send(update);
+
+  expect(res.status).toBe(200);
+  expect(res.body).toEqual(updatedUser);
 });

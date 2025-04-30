@@ -31,7 +31,7 @@ export const getUsers = async (req: Request, res: Response) => {
     logger.info(`getUsers called with filters: ${JSON.stringify(filters)}`);
     const users = await userService.getFilteredUsers(filters);
     logger.debug(`getUsers found ${users.length} users`);
-    res.json(users);
+    res.json(users.map(({ id, ...rest }) => rest));
   } catch (error) {
     logger.error(`Error in getUsers: ${error}`);
     res.status(500).json({ error: 'Internal server error' });
@@ -71,14 +71,14 @@ export const getUser = async (req: Request, res: Response) => {
       logger.info(`getUser called with id: ${id}`);
       const user = await userService.getUserById(Number(id));
       logger.debug(`getUserById result: ${JSON.stringify(user)}`);
-      res.json(user);
+      res.json((({ id, ...rest }) => rest)(user));
       return;
     }
     if (domain) {
       logger.info(`getUser called with domain: ${domain}`);
       const users = await userService.getUsersByDomain(String(domain));
       logger.debug(`getUsersByDomain found ${users.length} users`);
-      res.json(users);
+      res.json(users.map(({ id, ...rest }) => rest));
       return;
     }
     logger.error('getUser called without id or domain');
@@ -96,7 +96,7 @@ export const addUsers = async (req: Request, res: Response) => {
     logger.debug(`Calling addUsers with ${Array.isArray(newUsers) ? newUsers.length : 0} users`);
     const createdUsers = await userService.addUsers(newUsers);
     logger.debug(`addUsers created ${createdUsers.length} users`);
-    res.status(201).json(createdUsers);
+    res.status(201).json(createdUsers.map(({ id, ...rest }) => rest));
   } catch (error) {
     logger.error(`Error in addUsers: ${error}`);
     res.status(500).json({ error: 'Failed to add users' });
@@ -111,6 +111,22 @@ export const deleteUser = async (req: Request, res: Response) => {
     res.status(204).send();
   } catch (error) {
     logger.error(`Error in deleteUser: ${error}`);
-    res.status(404).json({ error: (error as Error).message });
+    res.status(404).json({ error: 'Failed to delete user' });
+  }
+};
+
+export const updateUser = async (req: Request, res: Response) => {
+  try {
+    const id = Number(req.params.id);
+    logger.info(`updateUser called with id: ${id} and body: ${JSON.stringify(req.body)}`);
+    const updateResult = await userService.updateUserById(id, req.body);
+    if (updateResult !== undefined && updateResult !== null) {
+        res.json(updateResult);
+    } else {
+        res.status(404).json({ error: 'User not found or update failed' });
+    }
+  } catch (error) {
+    logger.error(`Error in updateUser: ${error}`);
+    res.status(404).json({ error: 'Failed to update users' });
   }
 };
