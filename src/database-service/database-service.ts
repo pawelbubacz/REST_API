@@ -49,7 +49,11 @@ class MikroOrmUserService implements IUserService {
     }
 
     Object.entries(filters).forEach(([key, value]) => {
-      (filterQuery as Record<string, { $ilike: string }>)[key] = { $ilike: `%${value}%` };
+      if (key === 'name') {
+        (filterQuery as Record<string, { $ilike: string }>)[key] = { $ilike: `${value} %` };
+      } else {
+        (filterQuery as Record<string, { $ilike: string }>)[key] = { $ilike: `%${value}%` };
+      }
     });
 
     try {
